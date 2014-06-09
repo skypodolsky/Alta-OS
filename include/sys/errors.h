@@ -1,0 +1,14 @@
+#ifndef ERRORS_HEADER
+#define ERRORS_HEADER
+
+typedef enum alta_error_t {
+	ERR_NOERR,		/* NO ERROR					*/
+	ERR_UNREC,		/* UNRECOGNIZED ERROR		*/
+	ERR_BADALLOC,	/* BAD MEMORY ALLOCATION	*/
+	ERR_NEXIST,		/* OBJECT DOES NOT EXIST	*/
+	ERR_READ,		/* READ ERROR				*/
+	ERR_WRITE,		/* WRITE ERROR				*/
+	ERR_NOPARAM,	/* NO PARAM WAS GIVEN		*/
+} error_t;
+
+#endif
