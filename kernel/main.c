@@ -8,7 +8,7 @@ uint8_t g_tty_attr;
 
 int kernel_start() {
 
-	sys_tty_set_attr(FOREGROUND_GREEN, BACKGROUND_RED);
+	sys_tty_set_attr(FOREGROUND_WHITE, BACKGROUND_BLACK);
 	printf("Kernel started!\n");
 
 	while(1) {
