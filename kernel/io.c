@@ -2,6 +2,10 @@
 #include <sys/io.h>
 #include <sys/types.h>
 
+uint8_t g_tty_x;
+uint8_t g_tty_y;
+uint8_t g_tty_attr;
+
 void sys_print(char* str) {
 	int i = 0;
 	while (str[i] != 0) {

@@ -2,7 +2,7 @@ IMAGE_DIR=../image
 BOOT_DIR=../boot
 
 CFLAGS=-m32 -ffreestanding -Wall -std=gnu99 -nostdlib -nodefaultlibs -nostartfiles -I../include -Os
-OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o
+OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o
 KERNEL_IMG=alta_kernel.bin
 
 .PHONY=all clean
@@ -29,6 +29,7 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS)
 	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/
 	dd if=$(IMAGE_DIR)/kernel of=$(IMAGE_DIR)/boot.o seek=1
 	../tools/create_kernel $(IMAGE_DIR)/boot.o
+	mv $(IMAGE_DIR)/boot.o $(IMAGE_DIR)/alta_intact
 	mv $(IMAGE_DIR)/kernel $(IMAGE_DIR)/$(KERNEL_IMG)
 
 # Assembler sources
@@ -42,5 +43,5 @@ kernel.o: kernel.asm
 clean:
 	rm *.o
 	rm local_kernel
-	rm $(IMAGE_DIR)/*.o
+	rm $(IMAGE_DIR)/alta_intact
 	rm $(IMAGE_DIR)/$(KERNEL_IMG)

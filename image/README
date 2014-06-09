@@ -1,5 +1,5 @@
 This is target directory for all images
 File description:
-	- boot.o -> bootloader object file
-	- alta_image.bin -> final Alta image
+	- alta_intact -> merged bootloader & kernel file
+	- alta_image.bin -> final Alta image, prepared for emulation
 
