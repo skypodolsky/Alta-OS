@@ -158,10 +158,6 @@ void printf(char* fmt, ...) {
 						break;
 				}
 				break;
-			case '\n':
-				g_tty_x = 0;
-				g_tty_y++;
-				break;
 			default:
 				u_str[0] = byte;
 				sys_print(u_str);

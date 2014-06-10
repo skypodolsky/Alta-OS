@@ -18,9 +18,19 @@ void sys_print(char* str) {
 
 			g_tty_x = 0;
 		}
-		arch_tty_byte_output(str[i], g_tty_attr);
-		g_tty_x++;
-		i++;
+
+/* checking for newlines, tabs, or backspaces */
+/* TODO: tabs, backspaces */
+
+		if (str[i] == '\n') {
+				g_tty_x = 0;
+				g_tty_y++;
+				i++;
+		} else {
+			arch_tty_byte_output(str[i], g_tty_attr);
+			g_tty_x++;
+			i++;
+		}
 	}
 }
 
