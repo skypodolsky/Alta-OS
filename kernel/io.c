@@ -34,7 +34,7 @@ void sys_print(char* str) {
 	}
 }
 
-void sys_set_tty_xy(uint8_t x, uint8_t y) {
+void sys_tty_set_xy(uint8_t x, uint8_t y) {
 	g_tty_x = x;
 	g_tty_y = y;
 }
@@ -70,7 +70,7 @@ void sys_tty_clear_screen() {
 		}
 	}
 
-	sys_set_tty_xy(0, 0);
+	sys_tty_set_xy(0, 0);
 }
 
 void sys_tty_set_attr(uint8_t foreground, uint8_t background) {
