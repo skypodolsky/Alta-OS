@@ -16,8 +16,6 @@ int kernel_start() {
 	gdt_init();
 	idt_init();
 
-	*(uint32_t*)(0xFFFFFF) = 2;
-
 	while(1) {
 		/* hlt */
 	}

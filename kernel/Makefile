@@ -2,7 +2,7 @@ IMAGE_DIR=../image
 BOOT_DIR=../boot
 
 CFLAGS=-m32 -ffreestanding -Wall -std=gnu99 -nostdlib -nodefaultlibs -nostartfiles -I../include -Os
-OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o
+OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o
 KERNEL_IMG=alta_kernel.bin
 
 .PHONY=all clean
