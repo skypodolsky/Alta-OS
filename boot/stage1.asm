@@ -1,12 +1,9 @@
-; *******************************
-; *	      Alta OS		*
-; *	Bootloader v. 0.2b	*
-; *				*
-; *	Stanislav Podolsky	*
-; *******************************
-
 [BITS 16]
 [ORG 0x7c00]
+
+%define MAX_SIZE_KBYTES 5							; maximal kernel size in kbytes
+%define MAX_SIZE_BYTES MAX_SIZE_KBYTES * 1024		; maximal kernel size in bytes
+%define MAX_SIZE_SECT (MAX_SIZE_BYTES / 512) + 1	; maximal kernel size in sectors
 
 _start:
 
@@ -36,36 +33,30 @@ _start:
 
     jc .read_params	; die, but DO that
 
-    and cl, 0x3f	; sectors per track
+    and cl, 0x3f	; maximal amount of sectors per one track
 
 ; Reading the disk memory
-
-	xor di, di
 
 	push word 0		; offset
 	push cx			; amount of sectors
 
-read_sectors:
+; Checking for BIOS INT 13h extensions
+.check_ext:
 
-   ; cmp di, cx
-    ;je load_next
+	mov ah, 0x41
+	mov bx,	0x55AA
+	mov dl, 0x80
+	int 0x13
 
-    mov bx, 0x800   	; segment 0x800
-    mov es, bx
-    mov bx, 0x00    	; offset
-    mov ah, 0x02    	; disk reading
-    mov dh, 0x00    	; head #0
-    mov al, byte 10 	; count of sectors
-    mov cl, 0x02    	; from the second sector
-    mov ch, 0x00    	; track #0
-    mov dl, 0x80  	; drive 0x80 (HDD controller #1)
+	jc .check_ext		; error: no int 13h extensions
 
-    int 13h
+.read_sectors:
 
-;    add di, byte 1
- ;   add [esp+2], word 200
-
-;    jmp read_sectors
+	mov si, DAPACK		; address of "disk address packet"
+	mov ah, 0x42		; AL is unused
+	mov dl, 0x80		; drive number 0 (OR the drive # with 0x80)
+	int 0x13
+	jc .read_sectors
 
 load_next:
 
@@ -144,6 +135,23 @@ db 0x00		; the 1-st base
 gd_reg:		; GDTR register value
 dw 8291
 dd gdt
+
+; For INT 13h LBA reading
+
+DAPACK:
+	db	0x10
+	db	0
+
+blkcnt:
+	dw	MAX_SIZE_SECT		; INT 13h resets this to # of blocks actually read/written
+
+db_add:
+	dw	0x8000				; memory buffer destination address (0:7c00)
+	dw	0					; in memory page zero
+
+d_lba:
+	dd	1					; put the lba to read in this spot
+	dd	0					; more storage bytes only for big lba's ( > 4 bytes )
 
 times 510-($-$$) db 0
 dw 0xAA55

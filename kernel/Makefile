@@ -18,7 +18,7 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS)
 # implicit compiling of C sources
 
 # Linking all together
-	ld -Ttext 0x0 -Tdata 0x400000 -o local_kernel $(OBJECTS)
+	ld -melf_i386 -Ttext 0x0 -Tdata 0x400000 -o local_kernel $(OBJECTS)
 
 # Stripping unneded
 	strip --remove-section=.eh_frame local_kernel
@@ -31,6 +31,7 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS)
 	../tools/create_kernel $(IMAGE_DIR)/boot.o
 	mv $(IMAGE_DIR)/boot.o $(IMAGE_DIR)/alta_intact
 	mv $(IMAGE_DIR)/kernel $(IMAGE_DIR)/$(KERNEL_IMG)
+	dd if=/dev/zero of=$(IMAGE_DIR)/$(KERNEL_IMG) seek=128 count=1
 
 # Assembler sources
 tty_asm.o: tty.asm
