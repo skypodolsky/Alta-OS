@@ -27,6 +27,8 @@ _start:
 
 ; Getting amount of sectors per one track
 
+	xor cx, cx
+
 .read_params:
     mov ah, 0x08
     mov dl, 0x80
@@ -36,51 +38,34 @@ _start:
 
     and cl, 0x3f	; sectors per track
 
-; Reading 60 KB of disk memory
+; Reading the disk memory
 
-    push word 0x0 	; miltiplied value - offset:
-    push word 0x0 	; current offset
-    push word 0x0 	; current track
-    push word 0x0 	; tracks count
-    push cx		; count of sectors
+	xor di, di
 
-    xor di, di
-    mov di, [esp]
-    mov ax, word 512
-    mul di
-    mov [esp+8], ax
-
-    xor dx, dx
-    mov bx, ax
-    mov ax, 0xFFFF
-    div bx
-
-    mov [esp+2], ax
+	push word 0		; offset
+	push cx			; amount of sectors
 
 read_sectors:
 
-    mov di, [esp+4]
-    cmp di, [esp+2]
-    je load_next
+   ; cmp di, cx
+    ;je load_next
 
     mov bx, 0x800   	; segment 0x800
     mov es, bx
-    mov bx, [esp+6]    	; offset
+    mov bx, 0x00    	; offset
     mov ah, 0x02    	; disk reading
     mov dh, 0x00    	; head #0
-    mov al, [esp] 	; count of sectors
+    mov al, byte 10 	; count of sectors
     mov cl, 0x02    	; from the second sector
-    mov ch, [esp+4]    	; track #0
+    mov ch, 0x00    	; track #0
     mov dl, 0x80  	; drive 0x80 (HDD controller #1)
 
     int 13h
 
-    add [esp+4], byte 1
+;    add di, byte 1
+ ;   add [esp+2], word 200
 
-    mov ax, [esp+8]
-    add [esp+6], ax
-
-    jmp read_sectors
+;    jmp read_sectors
 
 load_next:
 
