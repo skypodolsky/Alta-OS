@@ -1,0 +1,14 @@
+1. Scrolling after the newline ('\n') has been printed at last line
+2. Check function signatures in 'stdlib.h'
+3. Add functions, listed below:
+  	 - sprintf
+	 - snprintf
+	 - strncpy
+	 - strncmp
+	 - gets
+	 - getc
+	 - scanf
+	 - sscanf
+ 4. Add timer routines
+ 5. Add 'sleep', 'msleep' and 'mcsleep' functions.
+
