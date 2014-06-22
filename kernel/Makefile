@@ -13,7 +13,7 @@ all: $(IMAGE_DIR)/$(KERNEL_IMG)
 # Building all sources -> assembler sources + C sources #
 #########################################################
 
-$(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS)
+$(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS) $(BOOT_DIR)/boot.o
 
 # implicit compiling of C sources
 

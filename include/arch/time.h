@@ -3,6 +3,8 @@
 
 #include <sys/types.h>
 
-extern uint64_t jiffies;
+extern volatile uint64_t jiffies;
+
+uint64_t x86_get_tsc();
 
 #endif /* TIME_HEADER */

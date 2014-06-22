@@ -21,5 +21,6 @@ uint8_t scan_code;
 }
 
 void irq_process_timer() {
+	/* we update system timer every 10 ms */
 	jiffies++;
 }
