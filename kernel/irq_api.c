@@ -1,6 +1,6 @@
 #include <arch/irq_api.h>
+#include <arch/time.h>
 
-#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stdlib.h>
 #include <sys/keyboard.h>
