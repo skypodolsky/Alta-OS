@@ -64,8 +64,8 @@ void sys_tty_scroll() {
 void sys_tty_clear_screen() {
 	int i, j;
 
-	for (i = 0; i < 80; i++) {
-		for (j = 0; j < 25; j++) {
+	for (i = 0; i < MAX_TTY_X; i++) {
+		for (j = 0; j < MAX_TTY_Y; j++) {
 			arch_tty_set_mem(i, j, (g_tty_attr << 8));	/* filling with null */
 		}
 	}

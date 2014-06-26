@@ -2,7 +2,7 @@ IMAGE_DIR=../image
 BOOT_DIR=../boot
 
 CFLAGS=-m32 -ffreestanding -Wall -std=gnu99 -nostdlib -nodefaultlibs -nostartfiles -I../include -Os
-OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o
+OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o keyboard.o time.o
 KERNEL_IMG=alta_kernel.bin
 
 .PHONY=all clean
@@ -13,7 +13,7 @@ all: $(IMAGE_DIR)/$(KERNEL_IMG)
 # Building all sources -> assembler sources + C sources #
 #########################################################
 
-$(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS)
+$(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS) $(BOOT_DIR)/boot.o
 
 # implicit compiling of C sources
 

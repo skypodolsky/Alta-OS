@@ -1,11 +1,12 @@
 #include <arch/idt.h>
 #include <arch/irq.h>
+#include <arch/irq_api.h>
 
 #include <sys/types.h>
 #include <sys/stdlib.h>
 
 IRQ_HANDLER(__irq_timer) {
-printf("+");
+	irq_process_timer();
 }
 
 IRQ_HANDLER(__irq_keyboard) {
