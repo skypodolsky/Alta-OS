@@ -24,7 +24,7 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS)
 	strip --remove-section=.eh_frame local_kernel
 
 # Converting to the binary format and copying into the $(IMAGE_DIR)
-	ld --oformat binary -Ttext 0x0 -Tdata 0x400000 local_kernel -o $(IMAGE_DIR)/kernel
+	ld -melf_i386 --oformat binary -Ttext 0x0 -Tdata 0x400000 local_kernel -o $(IMAGE_DIR)/kernel
 
 	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/
 	dd if=$(IMAGE_DIR)/kernel of=$(IMAGE_DIR)/boot.o seek=1
