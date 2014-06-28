@@ -1,7 +1,7 @@
 #ifndef IRQ_HEADER
 #define IRQ_HEADER
 
-void irq_pic_init();
+void sys_irq_pic_init();
 
 void __irq_timer();
 void __irq_keyboard();

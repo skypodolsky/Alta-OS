@@ -14,5 +14,6 @@ void sys_keyboard_handler(uint8_t);
 uint8_t sys_keyboard_get_scan_code();
 char sys_keyboard_read_char();
 void sys_keyboard_charset_init();
+void sys_keyboard_init();
 
 #endif /* KEYBOARD_HEADER */

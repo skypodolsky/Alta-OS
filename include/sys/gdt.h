@@ -24,8 +24,8 @@ typedef struct GDT_reg_val {
 } __attribute__((packed)) gdt_reg_val;
 
 /* GDT functions */
-void gdt_init();
-void gdt_seg_reg_reload();
-void gdt_get_value( uint32_t );
+void sys_gdt_init();
+void sys_gdt_seg_reg_reload();
+void sys_gdt_get_value(uint32_t);
 
 #endif	/* GDT_HEADER */

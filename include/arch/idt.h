@@ -20,9 +20,9 @@ typedef struct IDT_reg_val {
 
 #define MAX_IRQ_DESC_NUM 255
 
-void idt_init();
-void irq_init();
-void exceptions_init();
-void irq_set_handler(uint8_t, uint32_t, uint8_t);
+void sys_idt_init();
+void sys_irq_init();
+void sys_exceptions_init();
+void sys_irq_set_handler(uint8_t, uint32_t, uint8_t);
 
 #endif	/* IDT_HEADER */

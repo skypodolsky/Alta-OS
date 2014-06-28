@@ -1,11 +1,12 @@
 #include <sys/gdt.h>
+#include <sys/debug.h>
 #include <sys/stdlib.h>
 
 static gdt_desc sys_gdt_desc[MAX_GDT_ENTRIES];
 static gdt_reg_val sys_gdt_reg_val;
 
 /* creates predefined GDT entry */
-void gdt_set_predefined_entry(uint16_t index, uint8_t flags) {
+void sys_gdt_set_predefined_entry(uint16_t index, uint8_t flags) {
 
 	sys_gdt_desc[index].limit_third 	= 0xFF;
 	sys_gdt_desc[index].limit_second 	= 0xFF;
@@ -19,23 +20,24 @@ void gdt_set_predefined_entry(uint16_t index, uint8_t flags) {
 }
 
 /* Initializes all segments */
-void gdt_init() {
+void sys_gdt_init() {
 
 	memset(&sys_gdt_desc[0], 0, sizeof(gdt_desc));	/* 'dummy' segment */
-	gdt_set_predefined_entry(1, 0x9A);				/* code segment */
-	gdt_set_predefined_entry(2, 0x92);				/* data segment */
-	gdt_set_predefined_entry(3, 0x96);				/* stack segment */
+	sys_gdt_set_predefined_entry(1, 0x9A);				/* code segment */
+	sys_gdt_set_predefined_entry(2, 0x92);				/* data segment */
+	sys_gdt_set_predefined_entry(3, 0x96);				/* stack segment */
 
 	sys_gdt_reg_val.limit = 8291;
 	sys_gdt_reg_val.base = (uint32_t)&sys_gdt_desc[0];
 
 	asm volatile ("lgdt (,%0,)"::"a"(&sys_gdt_reg_val));
 
-	gdt_seg_reg_reload();
+	sys_gdt_seg_reg_reload();
+	DBG_PRINT(KERN_INFO"GDT initialized\n");
 
 }
 
-void gdt_get_value(uint32_t address) {
+void sys_gdt_get_value(uint32_t address) {
     asm volatile ("sgdt (,%0,)"::"a"(address));
 }
 
@@ -51,7 +53,7 @@ void gdt_get_value(uint32_t address) {
 *	using it.																			*
 ****************************************************************************************/
 
-void gdt_seg_reg_reload() {
+void sys_gdt_seg_reg_reload() {
 
 	asm volatile ("mov $16, %eax\n"
 		"mov %ds, %eax\n"

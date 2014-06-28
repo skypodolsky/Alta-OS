@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <sys/debug.h>
 #include <sys/keyboard.h>
 
 char key_buf[MAX_KEYBUF];
@@ -8,11 +9,15 @@ uint8_t key_buf_head;
 char low_charset[MAX_CHARSET];
 char big_charset[MAX_CHARSET];
 
+void sys_keyboard_init() {
+	sys_keyboard_charset_init();
+	DBG_PRINT(KERN_INFO"Charset initialized\n");
+}
+
 void sys_keyboard_handler(uint8_t scan_code) {
 
-	if (key_buf_tail >= MAX_KEYBUF) {
+	if (key_buf_tail >= MAX_KEYBUF)
 		key_buf_tail = 0;
-	}
 
 	key_buf_tail++;
 	key_buf[key_buf_tail - 1] = scan_code;

@@ -13,7 +13,7 @@ IRQ_HANDLER(__irq_keyboard) {
 	irq_process_keyboard();
 }
 
-void irq_pic_init() {
+void sys_irq_pic_init() {
     outportb(0x20, 0x11);       /* init command */
     outportb(0x21, 0x20);       /* base */
     outportb(0x21, 4);          /* slave PIC is at IRQ2 ( 00000100 ) */

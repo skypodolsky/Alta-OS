@@ -103,7 +103,7 @@ char* itoa(char* num_buffer, uint8_t sz_buf, size_t value, uint8_t base) {
 		value = value / base;
 	} while (value);
 
-	for ( ; j < sz_buf-i; j++)
+	for ( ; j < sz_buf - i; j++)
 		num_buffer[j] = num_buffer[j + i + 1];
 
 	return &num_buffer[0];

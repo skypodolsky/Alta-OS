@@ -23,9 +23,14 @@ void sys_print(char* str) {
 /* TODO: tabs, backspaces */
 
 		if (str[i] == '\n') {
-				g_tty_x = 0;
+			g_tty_x = 0;
+
+			if (g_tty_y != MAX_TTY_Y - 1)
 				g_tty_y++;
-				i++;
+			else
+				sys_tty_scroll();
+
+			i++;
 		} else {
 			arch_tty_byte_output(str[i], g_tty_attr);
 			g_tty_x++;
@@ -76,4 +81,9 @@ void sys_tty_clear_screen() {
 void sys_tty_set_attr(uint8_t foreground, uint8_t background) {
 	g_tty_attr = background;
 	g_tty_attr |= foreground;
+}
+
+void sys_tty_get_attr(uint8_t *foreground, uint8_t *background) {
+	*foreground = g_tty_attr & 0x00FF;
+	*background = g_tty_attr >> 8;
 }
