@@ -4,6 +4,7 @@
 #include <sys/gdt.h>
 #include <arch/idt.h>
 #include <sys/debug.h>
+#include <sys/keyboard.h>
 
 int kernel_start() {
 
@@ -15,8 +16,13 @@ int kernel_start() {
 
 	gdt_init();
 	idt_init();
+	sys_keyboard_charset_init();
+
 
 	while(1) {
-		/* hlt */
+
+		char ch = sys_keyboard_read_char();
+		printf("%c", ch);
+
 	}
 }

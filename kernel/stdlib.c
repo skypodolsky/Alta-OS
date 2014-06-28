@@ -134,23 +134,28 @@ void printf(char* fmt, ...) {
 						break;
 
 					case 'd':
-						itoa(num_buf, sizeof(num_buf), *(int*)(ptr+(num_param++ * 4)), 10);
+						itoa(num_buf, sizeof(num_buf), *(int*)(ptr + (num_param++ * 4)), 10);
 						sys_print(num_buf);
 						i++;
 						continue;
 						break;
 					case 'x':
-						itoa(num_buf, sizeof(num_buf), *(int*)(ptr+(num_param++ * 4)), 16);
+						itoa(num_buf, sizeof(num_buf), *(int*)(ptr + (num_param++ * 4)), 16);
 						sys_print(num_buf);
 						i++;
 						continue;
 						break;
 					case 'b':
-						itoa(num_buf, sizeof(num_buf), *(int*)(ptr+(num_param++ * 4)), 2);
+						itoa(num_buf, sizeof(num_buf), *(int*)(ptr + (num_param++ * 4)), 2);
 						sys_print(num_buf);
 						i++;
 						continue;
 						break;
+					case 'c':
+						u_str[0] = *(char*)(ptr + (num_param++ * 4));
+						sys_print(u_str);
+						i++;
+					break;
 
 					default:
 						u_str[0] = byte;

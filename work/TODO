@@ -11,4 +11,4 @@
 	 - sscanf
  4. Add timer routines
  5. Add 'sleep', 'msleep' and 'mcsleep' functions.
-
+ 6. In 'stdlib.h' in printf function replace 'num_param++ * 4' to sizeof(size_t);
