@@ -23,6 +23,5 @@ int kernel_start() {
 
 		char ch = sys_keyboard_read_char();
 		printf("%c", ch);
-
 	}
 }

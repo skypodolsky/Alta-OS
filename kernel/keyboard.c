@@ -3,8 +3,8 @@
 #include <sys/keyboard.h>
 
 char key_buf[MAX_KEYBUF];
-uint8_t key_buf_tail;
-uint8_t key_buf_head;
+volatile uint8_t key_buf_tail;
+volatile uint8_t key_buf_head;
 
 char low_charset[MAX_CHARSET];
 char big_charset[MAX_CHARSET];
