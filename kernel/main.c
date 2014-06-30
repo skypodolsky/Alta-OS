@@ -21,7 +21,8 @@ int kernel_start() {
 
 	while(1) {
 
-		char ch = sys_keyboard_read_char();
-		printf("%c", ch);
+		char string[256];
+		gets(string);
+		printf("\n%s\n", string);
 	}
 }

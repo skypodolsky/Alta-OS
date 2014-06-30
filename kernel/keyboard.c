@@ -2,7 +2,7 @@
 #include <sys/debug.h>
 #include <sys/keyboard.h>
 
-char key_buf[MAX_KEYBUF];
+volatile char key_buf[MAX_KEYBUF];
 volatile uint8_t key_buf_tail;
 volatile uint8_t key_buf_head;
 

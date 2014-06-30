@@ -11,7 +11,6 @@ uint8_t status;
 uint8_t scan_code;
 
     inportb(0x60, scan_code);
-
 	sys_keyboard_handler(scan_code);
 
     inportb(0x61, status);      /* ready to get another symbol */
