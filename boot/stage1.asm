@@ -1,7 +1,7 @@
 [BITS 16]
 [ORG 0x7c00]
 
-%define MAX_SIZE_KBYTES 5							; maximal kernel size in kbytes
+%define MAX_SIZE_KBYTES 20							; maximal kernel size in kbytes
 %define MAX_SIZE_BYTES MAX_SIZE_KBYTES * 1024		; maximal kernel size in bytes
 %define MAX_SIZE_SECT (MAX_SIZE_BYTES / 512) + 1	; maximal kernel size in sectors
 

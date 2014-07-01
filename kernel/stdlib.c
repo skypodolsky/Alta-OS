@@ -1,6 +1,7 @@
 #include <sys/io.h>
 #include <sys/types.h>
 #include <sys/stdlib.h>
+#include <sys/keyboard.h>
 
 int strcmp(const char* str1, const char* str2) {
     while ( *str1 != '\0' || *str2 != '\0' ) {
