@@ -38,7 +38,7 @@ tools:
 
 clean:
 
-	make -i -C $(BOOT_DIR) clean
-	make -i -C $(KERNEL_DIR) clean
-	make -i -C $(TOOLS_DIR) clean
+	make -C $(BOOT_DIR) clean
+	make -C $(KERNEL_DIR) clean
+	make -C $(TOOLS_DIR) clean
 

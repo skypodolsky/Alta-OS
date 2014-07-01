@@ -27,10 +27,9 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS) $(BOOT_DIR)/boot.o
 	ld -melf_i386 --oformat binary -Ttext 0x0 -Tdata 0x400000 local_kernel -o $(IMAGE_DIR)/kernel
 
 	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/
+	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/alta_bootloader.bim
 	dd if=$(IMAGE_DIR)/kernel of=$(IMAGE_DIR)/boot.o seek=1
-	../tools/create_kernel $(IMAGE_DIR)/boot.o
-	mv $(IMAGE_DIR)/boot.o $(IMAGE_DIR)/alta_intact
-	mv $(IMAGE_DIR)/kernel $(IMAGE_DIR)/$(KERNEL_IMG)
+	mv $(IMAGE_DIR)/boot.o $(IMAGE_DIR)/$(KERNEL_IMG)
 	dd if=/dev/zero of=$(IMAGE_DIR)/$(KERNEL_IMG) seek=128 count=1
 
 # Assembler sources
@@ -42,7 +41,7 @@ kernel.o: kernel.asm
 
 
 clean:
-	rm *.o
-	rm local_kernel
-	rm $(IMAGE_DIR)/alta_intact
-	rm $(IMAGE_DIR)/$(KERNEL_IMG)
+	rm -f *.o
+	rm -f local_kernel
+	rm -f $(IMAGE_DIR)/alta_intact
+	rm -f $(IMAGE_DIR)/$(KERNEL_IMG)

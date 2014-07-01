@@ -6,8 +6,8 @@ CFLAGS=-Wall
 all: create_kernel type_size
 
 clean:
-	rm create_kernel
-	rm type_size
+	rm -f create_kernel
+	rm -f type_size
 
 create_kernel:
 	$(CC) create_kernel.c $(CFLAGS) -o create_kernel
