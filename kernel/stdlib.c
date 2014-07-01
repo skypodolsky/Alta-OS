@@ -110,19 +110,19 @@ char* itoa(char* num_buffer, uint8_t sz_buf, size_t value, uint8_t base) {
 }
 
 int getchar(void) {
-return (int)sys_keyboard_read_char();
+	return (int)sys_keyboard_read_char();
 }
 
 char *gets(char *s) {
-int i = 0;
-int ch = getchar();
-while(ch != '\n') {
-	s[i++] = ch;
-	printf("%c", ch);
-	ch = getchar();
+	int i = 0;
+	int ch = getchar();
+	while(ch != '\n') {
+		s[i++] = ch;
+		printf("%c", ch);
+		ch = getchar();
 	}
-s[i++] = '\0';
-return s;
+	s[i++] = '\0';
+	return s;
 }
 
 void printf(char* fmt, ...) {
