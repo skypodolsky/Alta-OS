@@ -1,9 +1,9 @@
 /************************************************
-* Alta OS *
-* Memory manager implementation *
-* *
-* Stanislav Podolsky *
-* *
+* Alta OS										*
+* Memory manager implementation					*
+*												*
+* Stanislav Podolsky							*
+*												*
 ************************************************/
 
 #include <sys/mem.h>
@@ -15,7 +15,7 @@
   representation of virtual address by the PDE and PTE
  *************************************************************/
 
-size_t* virtual_represent_by_table(uint16_t pde, uint16_t pte, uint16_t offset) {
+static size_t* virtual_represent_by_table(uint16_t pde, uint16_t pte, uint16_t offset) {
 	uint32_t res = ( (pde << 22) | (pte << 12) ) + offset;
 	return (size_t*)res;
 }
@@ -25,8 +25,17 @@ size_t* virtual_represent_by_table(uint16_t pde, uint16_t pte, uint16_t offset) 
   retrieves index of page in the page list by virtual address
  *************************************************************/
 
-uint32_t index_by_virtual(size_t* addr) {
+static uint32_t index_by_virtual(size_t* addr) {
 	return ( ( (size_t)addr >> 22 ) * 1024 ) + ( ( (size_t)(addr) & 0x3FF000 ) >> 12 );
+}
+
+/*************************************************************
+  Function 'get_page_start_by_index' 
+  retrieves start address of the page by its index
+  ***********************************************************/
+static void* get_page_start_by_index(uint32_t index) {
+	size_t* res = virtual_represent_by_table(index / 1024, index % 1024, 0);
+	return (void*)res;
 }
 
 /*************************************************************
@@ -34,7 +43,7 @@ uint32_t index_by_virtual(size_t* addr) {
   marks page in page list with specified index to specified condition
  *************************************************************/
 
-void kpage_mark(uint32_t index, uint8_t cond) {
+static void kpage_mark(uint32_t index, uint8_t cond) {
 	uint8_t* mem_ptr = (uint8_t*)(MEM_CTRL_BASE + index);
 	*mem_ptr = cond;
 }
@@ -79,7 +88,7 @@ void kdel_page(uint16_t pde, uint16_t pte) {
   Function 'kmem_table_init'
   initializes kernel's code, data and stack, in page list
  *************************************************************/
-void kmem_table_init() {
+void sys_kmem_table_init() {
 
 	uint32_t i = 0;
 
@@ -166,11 +175,6 @@ void kfree(void* ptr) {
 			pde++;
 	}
 
-}
-
-void* get_page_start_by_index(uint32_t index) {
-	size_t* res = virtual_represent_by_table(index / 1024, index % 1024, 0);
-	return (void*)res;
 }
 
 void* kvalloc(uint32_t size) {

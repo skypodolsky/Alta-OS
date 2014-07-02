@@ -19,14 +19,15 @@
 #define PAGE_DPL3 0x60
 #define PAGE_DENY 0x01
 
-void kmem_table_init();	/* memory manager initialization */
-void* kmalloc( uint32_t, uint8_t );	/* lvl 1 allocator */
+void sys_kmem_table_init();								/* memory manager initialization */
+
+uint8_t	kmap_page( uint16_t, uint16_t, uint8_t );	/* mounts page specified by the PDE and PTE parameters */
+void	kdel_page( uint16_t, uint16_t );			/* unmounts page specified by the PDE and PTE parameters */
+
+void *kmalloc( uint32_t, uint8_t );	/* lvl 1 allocator */
+void *kvalloc( uint32_t );	/* lvl 2 allocator */
+
 void kfree( void* );
-
-void* kvalloc( uint32_t );	/* lvl 2 allocator */
 void kvfree( void* );
-
-uint8_t kmap_page( uint16_t, uint16_t, uint8_t );	/* mounts page specified by the PDE and PTE parameters */
-void kdel_page( uint16_t, uint16_t );	/* unmounts page */
 
 #endif /* MEMORY_HEADER */

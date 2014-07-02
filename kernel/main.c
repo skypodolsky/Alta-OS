@@ -2,9 +2,10 @@
 #include <arch/color.h>
 
 #include <sys/io.h>
-#include <sys/stdlib.h>
 #include <sys/gdt.h>
+#include <sys/mem.h>
 #include <sys/debug.h>
+#include <sys/stdlib.h>
 #include <sys/keyboard.h>
 
 int kernel_start() {
@@ -18,6 +19,7 @@ int kernel_start() {
 	sys_gdt_init();
 	sys_idt_init();
 	sys_keyboard_init();
+	sys_kmem_table_init();
 
 	while(1) {
 		char string[256];
