@@ -1,7 +1,7 @@
 Alta-OS
 =======
 
-Alta OS - is an operating system, designed by Stanislav Podolsky and Evgeniy Kondrashin for Intel i386 processor. You can freely use it in any own interests.
+Alta OS - is an operating system, designed by Stanislav Podolsky and Evgeniy Kondrashyn for Intel i386 processor. You can freely use it in any own interests.
 
 This features has been implemented:
 
