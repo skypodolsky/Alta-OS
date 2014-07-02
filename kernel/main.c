@@ -14,7 +14,7 @@ int kernel_start() {
 
 	sys_tty_set_attr(FOREGROUND_WHITE, BACKGROUND_BLACK);
 	DBG_PRINT("Kernel started!\n");
-//	printf("123");
+
 	sys_gdt_init();
 	sys_idt_init();
 	sys_keyboard_init();

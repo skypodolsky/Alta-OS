@@ -1,5 +1,6 @@
 #include <arch/exceptions.h>
 #include <arch/exceptions_api.h>
+
 #include <sys/types.h>
 
 void __exception_zero_divide() {
