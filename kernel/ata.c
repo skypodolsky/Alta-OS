@@ -503,11 +503,8 @@ static uint8_t ata_write_sectors(uint8_t index, uint16_t count, uint64_t src, ui
  *                                                                             *
  * Parameters:                                                                 *
  *           - uint8_t index [IN] - index of drive                             *
- *           - uint16_t count [IN] - amount of sectors to write                *
- *           - uint64_t lba_addr [IN] - LBA address of sector to write         *
- *           - uint8_t *buf [IN] - buffer to write                             *
  *                                                                             *
- * Return value: uint8_t ATA write result                                      *
+ * Return value: none                                                          *
  *******************************************************************************/
 static void ata_reset_drive(uint8_t index) {
 	outportb(sys_ide_device[index].cfg_reg, 4);
