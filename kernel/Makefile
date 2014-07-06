@@ -1,8 +1,8 @@
 IMAGE_DIR=../image
 BOOT_DIR=../boot
 
-CFLAGS=-m32 -ffreestanding -Wall -std=gnu99 -nostdlib -nodefaultlibs -nostartfiles -I../include -O0
-OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o keyboard.o time.o mem.o time_api.o
+CFLAGS=-m32 -ffreestanding -Wall -std=gnu99 -nostdlib -nodefaultlibs -nostartfiles -I../include -Os
+OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o keyboard.o time.o mem.o time_api.o ata.o
 KERNEL_IMG=alta_kernel.bin
 
 .PHONY=all clean
@@ -27,7 +27,7 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS) $(BOOT_DIR)/boot.o
 	ld -melf_i386 --oformat binary -Ttext 0x0 -Tdata 0x400000 local_kernel -o $(IMAGE_DIR)/kernel
 
 	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/
-	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/alta_bootloader.bim
+	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/alta_bootloader.bin
 	dd if=$(IMAGE_DIR)/kernel of=$(IMAGE_DIR)/boot.o seek=1
 	mv $(IMAGE_DIR)/boot.o $(IMAGE_DIR)/$(KERNEL_IMG)
 	dd if=/dev/zero of=$(IMAGE_DIR)/$(KERNEL_IMG) seek=128 count=1
