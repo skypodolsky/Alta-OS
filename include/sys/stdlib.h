@@ -11,13 +11,13 @@
 
 #include <sys/types.h>
 
-#define outportb(port, value) asm("outb %b0, %w1"::"a"(value),"d"(port));
-#define outportw(port, value) asm("outw %w0, %w1"::"a"(value),"d"(port));
-#define outportl(port, value) asm("outl %0, %w1"::"a"(value),"d"(port));
+#define outportb(port, value) asm volatile ("outb %b0, %w1"::"a"(value),"d"(port));
+#define outportw(port, value) asm volatile ("outw %w0, %w1"::"a"(value),"d"(port));
+#define outportl(port, value) asm volatile ("outl %0, %w1"::"a"(value),"d"(port));
 
-#define inportb(port, out_value) asm("inb %w1, %b0":"=a"(out_value):"d"(port));
-#define inportw(port, out_value) asm("inw %w1, %w0":"=a"(out_value):"d"(port));
-#define inportl(port, out_value) asm("inl %w1, %0":"=a"(out_value):"d"(port));
+#define inportb(port, out_value) asm volatile ("inb %w1, %b0":"=a"(out_value):"d"(port));
+#define inportw(port, out_value) asm volatile ("inw %w1, %w0":"=a"(out_value):"d"(port));
+#define inportl(port, out_value) asm volatile ("inl %w1, %0":"=a"(out_value):"d"(port));
 
 #define MAX_NUM_DIGITS 32
 
