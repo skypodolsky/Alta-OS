@@ -1,5 +1,6 @@
 #include <sys/ata.h>
 #include <sys/mem.h>
+#include <sys/debug.h>
 #include <sys/stdlib.h>
 
 volatile ide_device sys_ide_device[ATA_MAX_IDE_NUM];
@@ -21,9 +22,17 @@ static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf);
 static uint8_t ata_read_sectors(uint8_t index, uint16_t sectors, uint64_t lba_addr, uint8_t *buf);
 static uint8_t ata_write_sectors(uint8_t index, uint16_t sectors, uint64_t lba_addr, uint8_t *buf);
 
+/*******************************************************************************/
+/*                           External ATA functions                            */
+/*******************************************************************************/
+
 /*******************************************************************************
  * Function 'sys_ata_init':                                                    *
- * performs primary initialization of ATA drives                               *
+ * performs initialization of ATA drives                                       *
+ *                                                                             *
+ * Parameters: none                                                            *
+ *                                                                             *
+ * Return value: none                                                          *
  ******************************************************************************/
 void sys_ata_init() {
 	ide_dev_init(0, 0xA0, 0x1f0, 0x3f6);
@@ -34,6 +43,75 @@ void sys_ata_init() {
 	ata_scan();
 }
 
+/*******************************************************************************
+ * Function 'sys_ata_read_sectors':                                            *
+ * reads multiple sectors by the base LBA address                              *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint16_t count [IN] - amount of sectors to read                 *
+ *           - uint64_t lba_addr [IN] - LBA address of sector to read          *
+ *           - uint8_t* buf [OUT] - buffer to write                            *
+ *                                                                             *
+ * Return value: uint8_t ATA read result                                       *
+ *******************************************************************************/
+uint8_t sys_ata_read_sectors(uint8_t index, uint16_t count, uint64_t base_lba, uint8_t *buf) {
+	if (sys_ide_device[index].dev_ops->ata_read != NULL)
+		return sys_ide_device[index].dev_ops->ata_read(index, count, base_lba, buf);
+	else
+		return ATA_NOHNDL;
+}
+
+/*******************************************************************************
+ * Function 'sys_ata_write_sectors':                                           *
+ * writes multiple sectors by the base LBA address                             *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint16_t count [IN] - amount of sectors to write                *
+ *           - uint64_t lba_addr [IN] - LBA address of sector to write         *
+ *           - uint8_t *buf [IN] - buffer to write                             *
+ *                                                                             *
+ * Return value: uint8_t ATA write result                                      *
+ *******************************************************************************/
+uint8_t sys_ata_write_sectors(uint8_t index, uint16_t count, uint64_t base_lba, uint8_t *buf) {
+	if (sys_ide_device[index].dev_ops->ata_write != NULL)
+		return sys_ide_device[index].dev_ops->ata_write(index, count, base_lba, buf);
+	else
+		return ATA_NOHNDL;
+}
+
+/*******************************************************************************
+ * Function 'sys_ata_reset':                                                   *
+ * resets drive (master & slave) by index number                               *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *                                                                             *
+ * Return value: none                                                          *
+ *******************************************************************************/
+void sys_ata_reset(uint8_t index) {
+	if (sys_ide_device[index].type == IDE_TYPE_ATA)
+		if (sys_ide_device[index].dev_ops->ata_reset != NULL)
+			sys_ide_device[index].dev_ops->ata_reset(index);
+}
+
+/*******************************************************************************/
+/*                           Static ATA functions                              */
+/*******************************************************************************/
+
+/*******************************************************************************
+ * Function 'ide_dev_init':                                                    *
+ * performs primary initialization of ATA drives                               *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint8_t drive [IN] - primary/slave                              *
+ *           - uint8_t channel [IN] - command register                         *
+ *           - uint16_t cfg_reg [IN] - config register                         *
+ *                                                                             *
+ * Return value: none                                                          *
+ ******************************************************************************/
 static void ide_dev_init(uint8_t index, uint8_t drive, uint16_t channel, uint16_t cfg_reg) {
 	sys_ide_device[index].drive = drive;
 	sys_ide_device[index].channel = channel;
@@ -49,6 +127,10 @@ static void ide_dev_init(uint8_t index, uint8_t drive, uint16_t channel, uint16_
 /*******************************************************************************
  * Function 'ata_scan':                                                        *
  * scans all ATA drives on both of buses and fills sys_ide_device type field   *
+ *                                                                             *
+ * Parameters: none                                                            *
+ *                                                                             *
+ * Return value: none                                                          *
  ******************************************************************************/
 static void ata_scan() {
 	uint8_t i = 0;
@@ -57,7 +139,8 @@ static void ata_scan() {
 		outportb(sys_ide_device[i].cfg_reg, 2);
 
 		sys_ide_device[i].type = ata_verify(i);
-		printf("ATA[%d] type: %x\n", i, sys_ide_device[i].type);
+		if (sys_ide_device[i].type != 0xFF)
+		printf(KERN_INFO"IDE device found at drive %x, channel %x; Type = %x\n", sys_ide_device[i].drive, sys_ide_device[i].channel, sys_ide_device[i].type);
 
 		/* operations */
 		sys_ide_device[i].dev_ops->ata_read = ata_read_sectors;
@@ -69,6 +152,11 @@ static void ata_scan() {
 /*******************************************************************************
  * Function 'ata_verify':                                                      *
  * checks whether drive is attached on bus                                     *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t drive [IN] - index of drive                             *
+ *                                                                             *
+ * Return value: uint8_t type of ATA device                                    *
  ******************************************************************************/
  static uint8_t ata_verify(uint8_t drive) {
 	volatile uint8_t status = 0;			/* status register */
@@ -152,6 +240,11 @@ ata_identify_read:
 /*******************************************************************************
  * Function 'ata_400ns_delay':                                                 *
  * waits between drive operations, ~400 ns according to specification          *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *                                                                             *
+ * Return value: none                                                          *
  ******************************************************************************/
 static void ata_400ns_delay(uint8_t index) {
 	uint8_t status;
@@ -165,6 +258,11 @@ static void ata_400ns_delay(uint8_t index) {
 /*******************************************************************************
  * Function 'ata_20ms_delay':                                                  *
  * waits between drive operations, ~20 microseconds                            *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *                                                                             *
+ * Return value: none                                                          *
  ******************************************************************************/
 static void ata_20ms_delay(uint8_t index) {
 
@@ -173,11 +271,18 @@ static void ata_20ms_delay(uint8_t index) {
 		ata_400ns_delay(index);
 }
 
-/********************************************************************************
- * Function 'ata_read':                                                         *
- * reads one sector by the base LBA address                                     *
+/*******************************************************************************
+ * Function 'ata_read':                                                        *
+ * reads one sector by the base LBA address                                    *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint64_t lba_addr [IN] - LBA address of sector to read          *
+ *           - uint8_t *buf [OUT] - buffer to save read results                *
+ *                                                                             *
+ * Return value: uint8_t ATA read result                                       *
  *******************************************************************************/
-static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t* buf ) {
+static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	uint8_t status = 0;
 	uint16_t try_cnt = 0;
@@ -190,7 +295,7 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t* buf ) {
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
 		if ( try_cnt == ATA_MAX_OPERATIONS )
-			return ATA_NEXIST;
+			return ATA_NEXIST;/* FIXME: <- */
 
 		try_cnt++;
 	} while ( (status & ATA_BSY) );
@@ -254,11 +359,18 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t* buf ) {
 	return ATA_SUCCESS;
 }
 
-/********************************************************************************
- * Function 'ata_write':                                                        *
- * writes one sector by the base LBA address                                    *
+/*******************************************************************************
+ * Function 'ata_write':                                                       *
+ * writes one sector by the base LBA address                                   *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint64_t lba_addr [IN] - LBA address of sector to write         *
+ *           - uint8_t *buf [IN] - buffer to write                             *
+ *                                                                             *
+ * Return value: uint8_t ATA write result                                      *
  *******************************************************************************/
-static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t* buf ) {
+static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	uint8_t status = 0;
 	uint16_t try_cnt = 0;
@@ -329,7 +441,19 @@ static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t* buf ) {
 	return ATA_SUCCESS;
 }
 
-static uint8_t ata_read_sectors(uint8_t index, uint16_t count, uint64_t src, uint8_t* buf) {
+/*******************************************************************************
+ * Function 'ata_read_sectors':                                                *
+ * reads multiple sectors by the base LBA address                              *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint16_t count [IN] - amount of sectors to read                 *
+ *           - uint64_t lba_addr [IN] - LBA address of sector to read          *
+ *           - uint8_t *buf [OUT] - buffer to save read results                *
+ *                                                                             *
+ * Return value: uint8_t ATA read result                                       *
+ *******************************************************************************/
+static uint8_t ata_read_sectors(uint8_t index, uint16_t count, uint64_t src, uint8_t *buf) {
 	uint16_t offset = 0;
 	uint16_t i = 0;
 
@@ -345,7 +469,19 @@ static uint8_t ata_read_sectors(uint8_t index, uint16_t count, uint64_t src, uin
 	return ATA_SUCCESS;
 }
 
-static uint8_t ata_write_sectors(uint8_t index, uint16_t count, uint64_t src, uint8_t* buf) {
+/*******************************************************************************
+ * Function 'ata_write_sectors':                                               *
+ * writes multiple sectors by the base LBA address                             *
+ *                                                                             *
+ * Parameters:                                                                 *
+ *           - uint8_t index [IN] - index of drive                             *
+ *           - uint16_t count [IN] - amount of sectors to write                *
+ *           - uint64_t lba_addr [IN] - LBA address of sector to write         *
+ *           - uint8_t *buf [IN] - buffer to write                             *
+ *                                                                             *
+ * Return value: uint8_t ATA write result                                      *
+ *******************************************************************************/
+static uint8_t ata_write_sectors(uint8_t index, uint16_t count, uint64_t src, uint8_t * buf) {
 	uint16_t offset = 0;
 	uint16_t i = 0;
 
@@ -365,26 +501,4 @@ static void ata_reset_drive(uint8_t index) {
 	outportb(sys_ide_device[index].cfg_reg, 4);
 }
 
-/*******************************************************************************/
-/*                           External ATA functions                            */
-/*******************************************************************************/
 
-uint8_t sys_ata_read_sectors(uint8_t index, uint16_t count, uint64_t base_lba, uint8_t *buf) {
-	if (sys_ide_device[index].dev_ops->ata_read != NULL)
-		return sys_ide_device[index].dev_ops->ata_read(index, count, base_lba, buf);
-	else
-		return ATA_NOHNDL;
-}
-
-uint8_t sys_ata_write_sectors(uint8_t index, uint16_t count, uint64_t base_lba, uint8_t *buf) {
-	if (sys_ide_device[index].dev_ops->ata_write != NULL)
-		return sys_ide_device[index].dev_ops->ata_write(index, count, base_lba, buf);
-	else
-		return ATA_NOHNDL;
-}
-
-void sys_ata_reset(uint8_t index) {
-	if (sys_ide_device[index].type == IDE_TYPE_ATA)
-		if (sys_ide_device[index].dev_ops->ata_reset != NULL)
-			sys_ide_device[index].dev_ops->ata_reset(index);
-}

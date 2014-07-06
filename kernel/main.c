@@ -23,10 +23,13 @@ int kernel_start() {
 	sys_kmem_table_init();
 	sys_ata_init();
 
+#if 0
+/* ATA demo functionality */
 	uint8_t mem[1024];
 	sys_ata_read_sectors(0, 2, 0, mem);
 	for (int i = 0; i< 1024; i++)
 		printf("%x ", mem[i]);
+#endif
 
 	while(1) {
 		char string[256];
