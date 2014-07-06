@@ -7,6 +7,7 @@
 #include <sys/debug.h>
 #include <sys/stdlib.h>
 #include <sys/keyboard.h>
+#include <sys/time.h>
 
 int kernel_start() {
 
@@ -22,8 +23,10 @@ int kernel_start() {
 	sys_kmem_table_init();
 
 	while(1) {
-		char string[256];
-		gets(string);
-		printf("\n%s\n", string);
+		//char string[256];
+		printf("\nTEST");
+		sleep(1);
+		//gets(string);
+		//printf("\n%s\n", string);
 	}
 }
