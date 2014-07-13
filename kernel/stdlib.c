@@ -117,12 +117,15 @@ int getchar(void) {
 char *gets(char *s) {
 	int i = 0;
 	int ch = getchar();
+
 	while(ch != '\n') {
 		s[i++] = ch;
 		printf("%c", ch);
 		ch = getchar();
 	}
+
 	s[i++] = '\0';
+
 	return s;
 }
 

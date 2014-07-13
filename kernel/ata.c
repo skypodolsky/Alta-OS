@@ -355,7 +355,6 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	/* Disable nIEN bit */
 	// outportb(sys_ide_device[index].cfg_reg, 0);
-
 	return ATA_SUCCESS;
 }
 
@@ -454,7 +453,7 @@ static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
  * Return value: uint8_t ATA read result                                       *
  *******************************************************************************/
 static uint8_t ata_read_sectors(uint8_t index, uint16_t count, uint64_t src, uint8_t *buf) {
-	uint16_t offset = 0;
+	uint32_t offset = 0;
 	uint16_t i = 0;
 
 	for ( i = 0; i < count; i++ ) {

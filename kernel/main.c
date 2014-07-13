@@ -2,13 +2,14 @@
 #include <arch/color.h>
 
 #include <sys/io.h>
+#include <sys/fs.h>
 #include <sys/gdt.h>
 #include <sys/ata.h>
 #include <sys/mem.h>
+#include <sys/time.h>
 #include <sys/debug.h>
 #include <sys/stdlib.h>
 #include <sys/keyboard.h>
-#include <sys/time.h>
 
 int kernel_start() {
 
@@ -23,20 +24,18 @@ int kernel_start() {
 	sys_keyboard_init();
 	sys_kmem_table_init();
 	sys_ata_init();
+	sys_afs_init();
 
-#if 0
-/* ATA demo functionality */
-	uint8_t mem[1024];
-	sys_ata_read_sectors(0, 2, 0, mem);
-	for (int i = 0; i< 1024; i++)
-		printf("%x ", mem[i]);
-#endif
+	char abc[20] = {0};
+
+lab:
+
+	gets(abc);
+	int node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, abc);
+	printf("-> %d\n", node);
+
+goto lab;
 
 	while(1) {
-		//char string[256];
-		printf("\nTEST");
-		sleep(1);
-		//gets(string);
-		//printf("\n%s\n", string);
 	}
 }

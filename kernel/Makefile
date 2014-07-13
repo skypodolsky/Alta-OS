@@ -2,10 +2,10 @@ IMAGE_DIR=../image
 BOOT_DIR=../boot
 
 CFLAGS=-m32 -ffreestanding -Wall -std=gnu99 -nostdlib -nodefaultlibs -nostartfiles -I../include -Os
-OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o keyboard.o time.o mem.o time_api.o ata.o
+OBJECTS=kernel.o main.o tty_asm.o io.o stdlib.o gdt.o idt.o exceptions.o exceptions_api.o irq.o irq_api.o keyboard.o time.o mem.o time_api.o ata.o fs.o
 KERNEL_IMG=alta_kernel.bin
 
-.PHONY=all clean
+.PHONY=all clean update
 
 all: $(IMAGE_DIR)/$(KERNEL_IMG)
 
@@ -30,7 +30,7 @@ $(IMAGE_DIR)/$(KERNEL_IMG): $(OBJECTS) $(BOOT_DIR)/boot.o
 	cp $(BOOT_DIR)/boot.o $(IMAGE_DIR)/alta_bootloader.bin
 	dd if=$(IMAGE_DIR)/kernel of=$(IMAGE_DIR)/boot.o seek=1
 	mv $(IMAGE_DIR)/boot.o $(IMAGE_DIR)/$(KERNEL_IMG)
-	dd if=/dev/zero of=$(IMAGE_DIR)/$(KERNEL_IMG) seek=128 count=1
+	dd if=/dev/zero of=$(IMAGE_DIR)/$(KERNEL_IMG) seek=128 count=1024
 
 # Assembler sources
 tty_asm.o: tty.asm
@@ -45,3 +45,6 @@ clean:
 	rm -f local_kernel
 	rm -f $(IMAGE_DIR)/alta_intact
 	rm -f $(IMAGE_DIR)/$(KERNEL_IMG)
+	rm -f $(IMAGE_DIR)/alta_bootloader.bin
+	rm -f $(IMAGE_DIR)/kernel
+

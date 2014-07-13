@@ -15,7 +15,7 @@ BOOT_DIR=../boot
 IMAGE_DIR=../image
 TOOLS_DIR=../tools
 
-.PHONY=all clean boot kernel tools
+.PHONY=all clean boot kernel tools update
 
 ########################################################
 # 		      Entry point
@@ -41,4 +41,6 @@ clean:
 	make -C $(BOOT_DIR) clean
 	make -C $(KERNEL_DIR) clean
 	make -C $(TOOLS_DIR) clean
+
+update: clean all
 
