@@ -34,7 +34,7 @@ static void afs_cache_init() {
 	if (node_cache) {
 	
 		for (i = 0; i < AFS_MAX_FILES; i++)
-			node_cache[i] = AFS_NODE_FREE;
+			node_cache[i] = AFS_CACHE_NODE_FREE;
 
 		DBG_PRINT(KERN_INFO"Node cache initialized\n");
 	}
@@ -47,10 +47,10 @@ static void afs_cache_mark(uint32_t index, uint32_t state) {
 static uint32_t afs_cache_search_valid() {
 	uint32_t node;
 	for (node = 0; node < AFS_MAX_FILES; node++) {
-		if (node_cache[node] == AFS_NODE_FREE)
+		if (node_cache[node] == AFS_CACHE_NODE_FREE)
 			return node;
 	}
-	return AFS_NODE_INVALID;
+	return AFS_CACHE_NODE_LOCK;
 }
 
 /******************************************************************************/
@@ -75,10 +75,10 @@ void sys_afs_init() {
 
 					memcpy(&node_tmp, iterator->ptr, sizeof(struct file_desc));
 					if  ((node_tmp.attr & AFS_NODE_TYPE_ISEXIST)) {
-						afs_cache_mark(node, AFS_NODE_INVALID);
+						afs_cache_mark(node, AFS_CACHE_NODE_LOCK);
 						node++;
 					} else {
-						break;
+						break;	/* FIXME: BUG! */
 					}
 
 					iterator->ptr += sizeof(struct file_desc);
@@ -105,18 +105,16 @@ uint32_t sys_afs_table_add_node(uint8_t sys_byte, uint32_t parent, uint32_t chil
 	if (iterator->ptr != NULL) {
 
 		node = afs_cache_search_valid();
-		if (node != AFS_NODE_INVALID) {
+		if (node != AFS_CACHE_NODE_LOCK) {
 			printf("cache node found: %d\n", node);
 			iterator->ptr += (node * sizeof(struct file_desc));
-			afs_cache_mark(node, AFS_NODE_INVALID);
+			afs_cache_mark(node, AFS_CACHE_NODE_LOCK);
 		} else {
 			node = AFS_NODE_INVALID;
 			iterator->ptr = iterator->old_ptr;
 			goto exit;
 		}
 
-		/* did we found free place in the file descriptors table */
-		//
 		memset(&node_tmp, 0, sizeof(struct file_desc));
 
 		/* initializing node info */
@@ -146,3 +144,26 @@ exit:
 	else 
 		return AFS_NODE_INVALID;
 	}
+
+uint32_t sys_afs_table_del_node(uint32_t node) {
+	uint8_t rw_res = 0;
+	uint32_t status = node;
+	struct file_desc node_tmp;
+
+	if (iterator->ptr != NULL) {
+		iterator->ptr += node * sizeof(struct file_desc);
+		memcpy(&node_tmp, iterator->ptr, sizeof(struct file_desc));
+		node_tmp.sys_byte = 0x00;
+		memcpy(iterator->ptr, &node_tmp, sizeof(struct file_desc));
+		rw_res = sys_ata_write_sectors(0, 2, AFS_TABLE_ROOT + ((node * sizeof(struct file_desc)) / 512), iterator->old_ptr + ((node * sizeof(struct file_desc)) / 512) * 512);
+		afs_cache_mark(node, AFS_CACHE_NODE_FREE);
+
+		if (rw_res != ATA_SUCCESS)
+			status = AFS_NODE_INVALID;
+
+		iterator->ptr = iterator->old_ptr;
+	} else {
+		status = AFS_NODE_INVALID;
+	}
+	return status;
+}

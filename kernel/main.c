@@ -28,13 +28,17 @@ int kernel_start() {
 
 	char abc[20] = {0};
 
-lab:
+	uint32_t node;
 
-	gets(abc);
-	int node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, abc);
-	printf("-> %d\n", node);
-
-goto lab;
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "123");
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "456");
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "789");
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "ASDASF");
+	node = sys_afs_table_del_node(node);
+	printf("del : %x\n", node);
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "stanislav");
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "BURZUM");
+	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "AGGA");
 
 	while(1) {
 	}
