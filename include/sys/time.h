@@ -7,6 +7,8 @@ extern volatile uint64_t jiffies;
 
 void sleep(uint8_t sec);
 
+uint64_t get_cpu_freq();
+
 #endif /* TIME_HEADER */
 
 

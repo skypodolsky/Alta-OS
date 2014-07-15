@@ -41,5 +41,7 @@ int kernel_start() {
 	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, 0, AFS_NODE_ATTR_ISFILE, "AGGA");
 
 	while(1) {
+	printf("\nCPU FREQUENCY: %d", get_cpu_freq() );
+	sleep(1);
 	}
 }
