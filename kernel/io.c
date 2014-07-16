@@ -56,10 +56,10 @@ void sys_tty_scroll() {
     uint8_t i, j;
     uint16_t res;
 
-    for ( i = 0; i < MAX_TTY_Y; i++ )
-		for ( j = 0; j < MAX_TTY_X; j++ ) {
+    for (i = 0; i < MAX_TTY_Y; i++)
+		for (j = 0; j < MAX_TTY_X; j++) {
 			sys_tty_get_mem(j, i, &res);
-				if ( (res & 0x00FF) != 0 ) {
+				if ((res & 0x00FF) != 0) {
 					sys_tty_set_mem(j, i-1, res);
 					sys_tty_set_mem(j, i, 1792);
 				}

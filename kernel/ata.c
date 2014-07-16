@@ -135,7 +135,7 @@ static void ide_dev_init(uint8_t index, uint8_t drive, uint16_t channel, uint16_
 static void ata_scan() {
 	uint8_t i = 0;
 
-	for ( i = 0; i < ATA_MAX_IDE_NUM; i++ ) {
+	for (i = 0; i < ATA_MAX_IDE_NUM; i++) {
 		outportb(sys_ide_device[i].cfg_reg, 2);
 
 		sys_ide_device[i].type = ata_verify(i);
@@ -183,7 +183,7 @@ static void ata_scan() {
 		if (try_cnt == ATA_MAX_OPERATIONS)
 			return IDE_TYPE_INVALID;	/* sorry, but you are busy too long */
 		try_cnt++;
-	} while ( (status & ATA_BSY) );
+	} while (status & ATA_BSY);
 
 	try_cnt = 0;
 
@@ -196,7 +196,7 @@ static void ata_scan() {
 			return IDE_TYPE_INVALID;
 
 		try_cnt++;
-	} while ( !(status & ATA_DRDY) );
+	} while (!(status & ATA_DRDY));
 
 	/* OK, now we know, that device DOES exist. Let's check it for ATA or ATAPI. */
 
@@ -212,7 +212,7 @@ static void ata_scan() {
 			break;	/* you don't have 0xEC command? Let's try 0xA1 for ATAPI */
 		}
 		try_cnt++;
-	} while ( !(status & ATA_DRQ) );
+	} while (!(status & ATA_DRQ));
 
 	if (!isATAPI_flg)
 		goto ata_identify_read;
@@ -222,12 +222,12 @@ static void ata_scan() {
 
 		do {
 			inportb(sys_ide_device[drive].channel + ATA_STATUS, status);
-		} while ( !(status & ATA_DRQ) );
+		} while (!(status & ATA_DRQ));
 	}
 
 ata_identify_read:
 
-	for ( i = 0; i < 256; i++ )
+	for (i = 0; i < 256; i++)
 		inportw(sys_ide_device[drive].channel + ATA_DATA, dbyte);
 
 		if (isATAPI_flg)
@@ -267,7 +267,7 @@ static void ata_400ns_delay(uint8_t index) {
 static void ata_20ms_delay(uint8_t index) {
 
 	uint8_t i;
-	for ( i = 0; i < 5; i++ )
+	for (i = 0; i < 5; i++)
 		ata_400ns_delay(index);
 }
 
@@ -282,7 +282,7 @@ static void ata_20ms_delay(uint8_t index) {
  *                                                                             *
  * Return value: uint8_t ATA read result                                       *
  *******************************************************************************/
-static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
+static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf) {
 
 	uint8_t status = 0;
 	uint16_t try_cnt = 0;
@@ -294,31 +294,31 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
-		if ( try_cnt == ATA_MAX_OPERATIONS )
+		if (try_cnt == ATA_MAX_OPERATIONS)
 			return ATA_NEXIST;/* FIXME: <- */
 
 		try_cnt++;
-	} while ( (status & ATA_BSY) );
+	} while (status & ATA_BSY);
 
 	//outportb(sys_ide_device[index].channel + ATA_ERROR, 0x00);
 	//outportw(sys_ide_device[index].channel + ATA_SECTOR, 0x00);
 	//outportb(sys_ide_device[index].channel + ATA_SECTOR, 0x00);
 
-	outportb(sys_ide_device[index].channel + ATA_DRIVE, (((sys_ide_device[index].drive & 0x1F) >> 4) == 1) ? 0x50 : 0x40 );
+	outportb(sys_ide_device[index].channel + ATA_DRIVE, (((sys_ide_device[index].drive & 0x1F) >> 4) == 1) ? 0x50 : 0x40);
 
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
-		if ( try_cnt == ATA_MAX_OPERATIONS )
+		if (try_cnt == ATA_MAX_OPERATIONS)
 			return ATA_NEXIST;
 		try_cnt++;
-	} while ( !(status & ATA_DRDY) );
+	} while (!(status & ATA_DRDY));
 
 	outportb(sys_ide_device[index].channel + ATA_SECTOR, 0);//((sectors & 0xFF00) >> 8));
 	outportb(sys_ide_device[index].channel + ATA_LBA_L, (uint8_t)(lba_addr & 0xFF000000) >> 24);
 	outportb(sys_ide_device[index].channel + ATA_LBA_M, (uint8_t)((uint64_t)(lba_addr & 0xFF00000000) >> 32));
 	outportb(sys_ide_device[index].channel + ATA_LBA_H, (uint8_t)((uint64_t)(lba_addr & 0xFF0000000000) >> 40));
 
-	outportb(sys_ide_device[index].channel + ATA_SECTOR, 1);//(sectors & 0xFF) );
+	outportb(sys_ide_device[index].channel + ATA_SECTOR, 1);//(sectors & 0xFF));
 
 	outportb(sys_ide_device[index].channel + ATA_LBA_L, (uint8_t)(lba_addr & 0x000000FF));
 	outportb(sys_ide_device[index].channel + ATA_LBA_M, (uint8_t)((lba_addr & 0x0000FF00) >> 8));
@@ -330,10 +330,10 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
-		if ( try_cnt == ATA_MAX_OPERATIONS )
+		if (try_cnt == ATA_MAX_OPERATIONS)
 			return ATA_NEXIST;
 		try_cnt++;
-	} while ( !(status & ATA_DRQ) );
+	} while (!(status & ATA_DRQ));
 
 	/* Transfering bytes */
 
@@ -341,7 +341,7 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 	uint16_t wordCount;	/* word */
 	uint8_t error;	/* error */
 
-	for ( wordCount = 0; wordCount < 256; wordCount++ ) {
+	for (wordCount = 0; wordCount < 256; wordCount++) {
 		inportw(sys_ide_device[index].channel + ATA_DATA, dbyte);
 		buf[(wordCount * 2)] = (uint8_t)(dbyte & 0xFF);
 		buf[(wordCount * 2) + 1] = (uint8_t)(dbyte >> 8);
@@ -369,7 +369,7 @@ static uint8_t ata_read(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
  *                                                                             *
  * Return value: uint8_t ATA write result                                      *
  *******************************************************************************/
-static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
+static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf) {
 
 	uint8_t status = 0;
 	uint16_t try_cnt = 0;
@@ -380,19 +380,19 @@ static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
-		if ( try_cnt == ATA_MAX_OPERATIONS )
+		if (try_cnt == ATA_MAX_OPERATIONS)
 			return ATA_NEXIST;
 		try_cnt++;
-	} while ( (status & ATA_BSY) );
+	} while (status & ATA_BSY);
 
-	outportb(sys_ide_device[index].channel + ATA_DRIVE, (((sys_ide_device[index].drive & 0x1F) >> 4) == 1) ? 0x50 : 0x40 );
+	outportb(sys_ide_device[index].channel + ATA_DRIVE, (((sys_ide_device[index].drive & 0x1F) >> 4) == 1) ? 0x50 : 0x40);
 
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
-		if ( try_cnt == ATA_MAX_OPERATIONS )
+		if (try_cnt == ATA_MAX_OPERATIONS)
 			return ATA_NEXIST;
 		try_cnt++;
-	} while ( !(status & ATA_DRDY) );
+	} while (!(status & ATA_DRDY));
 
 	outportb(sys_ide_device[index].channel + ATA_SECTOR, 0);//((sectors & 0xFF00) >> 8));
 
@@ -412,10 +412,10 @@ static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 
 	do {
 		inportb(sys_ide_device[index].channel + ATA_STATUS, status);
-		if ( try_cnt == ATA_MAX_OPERATIONS )
+		if (try_cnt == ATA_MAX_OPERATIONS)
 			return ATA_NEXIST;
 		try_cnt++;
-	} while ( !(status & ATA_DRQ) );
+	} while (!(status & ATA_DRQ));
 
 	/* Transfering bytes */
 
@@ -423,8 +423,8 @@ static uint8_t ata_write(uint8_t index, uint64_t lba_addr, uint8_t *buf ) {
 	uint16_t wordCount;	/* word */
 	uint8_t error;	/* error */
 
-	for ( wordCount = 0; wordCount < 256; wordCount++ ) {
-		dbyte = (*(buf + (wordCount * 2) + 1) << 8) | *(buf + (wordCount * 2) );
+	for (wordCount = 0; wordCount < 256; wordCount++) {
+		dbyte = (*(buf + (wordCount * 2) + 1) << 8) | *(buf + (wordCount * 2));
 		outportw(sys_ide_device[index].channel + ATA_DATA, dbyte);
 		ata_400ns_delay(index);
 	}
@@ -456,7 +456,7 @@ static uint8_t ata_read_sectors(uint8_t index, uint16_t count, uint64_t src, uin
 	uint32_t offset = 0;
 	uint16_t i = 0;
 
-	for ( i = 0; i < count; i++ ) {
+	for (i = 0; i < count; i++) {
 		uint8_t res = ata_read(0, src + i, buf + offset);
 		ata_20ms_delay(index);
 		if (res)
@@ -484,7 +484,7 @@ static uint8_t ata_write_sectors(uint8_t index, uint16_t count, uint64_t src, ui
 	uint16_t offset = 0;
 	uint16_t i = 0;
 
-	for ( i = 0; i < count; i++ ) {
+	for (i = 0; i < count; i++) {
 		uint8_t res = ata_write(0, src + i, buf + offset);
 		ata_20ms_delay(index);
 		if (res)

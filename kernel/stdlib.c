@@ -4,29 +4,29 @@
 #include <sys/keyboard.h>
 
 int strcmp(const char* str1, const char* str2) {
-    while ( *str1 != '\0' || *str2 != '\0' ) {
-		if ( *(str1++) != *(str2++) )
+    while (*str1 != '\0' || *str2 != '\0') {
+		if (*(str1++) != *(str2++))
 			return 1;
     }
     return 0;
 }
 
 void strcat(char* dst, const char* src) {
-    while ( *dst != '\0' )
+    while (*dst != '\0')
         dst++;
 
-	while ( *src != '\0' )
+	while (*src != '\0')
 	    *dst++=*src++;
 }
 
 void strcpy(char* dst, const char* src) {
-    while ( *src != '\0' )
+    while (*src != '\0')
 		*(dst++) = *(src++);
 }
 
 int strlen(const char* str) {
     int i = 0;
-    while ( *(str + i) != '\0' )
+    while (*(str + i) != '\0')
 		i++;
 
 	return i;
@@ -42,15 +42,15 @@ char* strtok(char* str, const char* delim) {
 	int i = 0;
 	int j = 0;
 
-	if ( !str ) {
+	if (!str) {
 		str = last;
-		if ( (str + strlen(str)) == last )
+		if ((str + strlen(str)) == last)
 			return 0;
 	}
 
-	for ( i = 0; i < strlen(str); i++ ) {
-		for ( j = 0; j < strlen(delim); j++ )
-			if ( str[i] == delim[j] ) {
+	for (i = 0; i < strlen(str); i++) {
+		for (j = 0; j < strlen(delim); j++)
+			if (str[i] == delim[j]) {
 				str[i] = 0;
 				last = str + i + 1;
 				return str;
@@ -64,7 +64,7 @@ char* strtok(char* str, const char* delim) {
 
 void memcpy(void* dst, void* src, uint32_t num) {
 	uint32_t counter = 0;
-	while ( counter!=num ) {
+	while (counter!=num) {
 		*(char*)(dst++) = *(char*)(src++);
 		counter++;
 	}
@@ -72,7 +72,7 @@ void memcpy(void* dst, void* src, uint32_t num) {
 
 void memset(void* dst, int val, uint32_t num) {
 	uint32_t counter = 0;
-	while ( counter!=num ) {
+	while (counter!=num) {
 		*(char*)(dst++) = val;
 		counter++;
 	}
@@ -80,8 +80,8 @@ void memset(void* dst, int val, uint32_t num) {
 
 int memcmp(void* dst, void* src, uint32_t num) {
 	uint32_t counter = 0;
-	while ( counter!= num ) {
-		if ( *(char*)(dst++) != *(char*)(src++) )
+	while (counter!= num) {
+		if (*(char*)(dst++) != *(char*)(src++))
 			return 1;
 		counter++;
 	}
@@ -90,7 +90,7 @@ int memcmp(void* dst, void* src, uint32_t num) {
 
 char* itoa(char* num_buffer, uint8_t sz_buf, size_t value, uint8_t base) {
 
-	if ( base < 2 || base > 16 )
+	if (base < 2 || base > 16)
 		return 0;
 
 	const char digits[] = "0123456789ABCDEF";
@@ -139,7 +139,7 @@ void printf(char* fmt, ...) {
 	char num_buf[MAX_NUM_DIGITS] = {0};
     void* ptr 		= &fmt;
 
-	for ( i = 0; i < strlen(fmt); i++ ) {
+	for (i = 0; i < strlen(fmt); i++) {
 
 		byte = *(fmt + i);
 		type = *(fmt + i + 1);

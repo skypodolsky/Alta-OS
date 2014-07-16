@@ -27,8 +27,8 @@ void sys_keyboard_handler(uint8_t scan_code) {
 uint8_t sys_keyboard_get_scan_code() {
 
 	uint8_t scan_code;
-	if ( key_buf_head != key_buf_tail ) {
-		if ( key_buf_head >= MAX_KEYBUF ) {
+	if (key_buf_head != key_buf_tail) {
+		if (key_buf_head >= MAX_KEYBUF) {
 			key_buf_head = 0;
 		}
 
@@ -83,7 +83,7 @@ void sys_keyboard_charset_init() {
 /* Low charset */
 
 	uint8_t i = 0;
-	for ( i = 0; i < MAX_CHARSET - 1; i++ ) {
+	for (i = 0; i < MAX_CHARSET - 1; i++) {
 		low_charset[i] = 0;
 		big_charset[i] = 0;
 	}
