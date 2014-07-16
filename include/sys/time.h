@@ -1,4 +1,4 @@
-#ifndef TIME_HEADER
+#ifndef SYS_TIME_HEADER
 #define SYS_TIME_HEADER
 
 #include <sys/types.h>
