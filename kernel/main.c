@@ -1,4 +1,5 @@
 #include <arch/idt.h>
+#include <arch/time.h>
 #include <arch/color.h>
 
 #include <sys/io.h>
