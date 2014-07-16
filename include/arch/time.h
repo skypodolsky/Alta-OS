@@ -1,5 +1,5 @@
-#ifndef TIME_HEADER
-#define SYS_TIME_HEADER
+#ifndef ARCH_TIME_HEADER
+#define ARCH_TIME_HEADER
 
 #include <sys/types.h>
 
