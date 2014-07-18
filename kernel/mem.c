@@ -203,7 +203,7 @@ void* kvalloc(uint32_t size) {
 			if ( ( (*table_addr) & 0x80) && ( !( (*table_addr) & 0x01 ) ) )	{	/* if table DOES exist */
 				uint8_t* page_start = get_page_start_by_index( (uint32_t)(table_addr - MEM_CTRL_BASE) );
 				uint8_t* page_tmp = page_start;
-				uint16_t free = 4084;
+				volatile uint16_t free = 4084;	/* FIXME: this is temporary fix */
 				page_tmp += 4;	/* first header */
 				tmp_32 = (uint32_t*)page_tmp;
 				while ( (*tmp_32) && (free > 0) ) {
