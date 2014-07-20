@@ -32,6 +32,16 @@ int strlen(const char* str) {
 	return i;
 }
 
+const char *strchr(const char *str, int ch) {
+	int i = 0;
+	while (*(str + i) != '\0') {
+		if (*(str + i) == ch)
+			return str + i;
+		i++;
+	}
+	return NULL;
+}
+
 char* strtok(char* str, const char* delim) {
 
 	static char* last;

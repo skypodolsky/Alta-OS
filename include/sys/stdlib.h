@@ -33,6 +33,7 @@ void 	strcat 	( char*, const char* );
 int 	strcmp 	( const char*, const char* );
 int 	strlen 	( const char* );
 char* 	strtok 	( char*, const char* );
+const char*	strchr	( const char*, int );
 char*	gets	( char* );
 
 /* memory functions */

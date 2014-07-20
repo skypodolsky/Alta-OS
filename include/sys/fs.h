@@ -8,12 +8,13 @@
 
 #define AFS_MAX_FILES	0x1000
 #define AFS_TABLE_ROOT	0x80
-#define AFS_TABLE_LBA	AFS_TABLE_ROOT + (sizeof(struct file_desc) * AFS_MAX_FILES)
+#define AFS_TABLE_LBA	(AFS_TABLE_ROOT + ((sizeof(struct file_desc) * AFS_MAX_FILES) / 512))
 
 #define AFS_CACHE_NODE_FREE		0x00000000
 #define AFS_CACHE_NODE_LOCK		0xFFFFFFFF
 
 #define AFS_NODE_INVALID	0xFFFFFFFF
+#define AFS_NODE_NOCHILD	AFS_NODE_INVALID
 
 /* file types */
 
@@ -50,5 +51,9 @@ struct table_iterator {
 void		sys_afs_init();
 uint32_t	sys_afs_table_add_node(uint8_t type, uint32_t parent, uint32_t child, uint16_t attr, const char* name);
 uint32_t	sys_afs_table_del_node(uint32_t node);
+uint32_t 	sys_afs_table_update_entry(uint32_t index, struct file_desc *node_in);
+
+uint32_t 	sys_get_node_by_name(const char *name, uint32_t parent);
+void		sys_get_node_by_index(uint32_t index, struct file_desc *node_out);
 
 #endif /* FS_HEADER */

@@ -167,3 +167,50 @@ uint32_t sys_afs_table_del_node(uint32_t node) {
 	}
 	return status;
 }
+
+uint32_t sys_get_node_by_name(const char *name, uint32_t parent) {
+
+	uint32_t node = 0;
+	uint32_t res = AFS_NODE_INVALID;
+
+	struct file_desc node_tmp;
+
+	do {
+		memcpy(&node_tmp, iterator->ptr, sizeof(struct file_desc));
+		if (node_tmp.parent_id == parent) {
+			if (!strcmp(node_tmp.name, name)) {
+				res = node;
+				goto exit;
+			}
+		}
+		iterator->ptr += sizeof(struct file_desc);
+		node++;
+	} while(node < AFS_MAX_FILES);
+
+exit:
+	iterator->ptr = iterator->old_ptr;
+	return res;
+}
+
+void sys_get_node_by_index(uint32_t index, struct file_desc *node_out) {
+	iterator->ptr = iterator->old_ptr + (sizeof(struct file_desc) * index);
+	memcpy(node_out, iterator->ptr, sizeof(struct file_desc));
+
+	iterator->ptr = iterator->old_ptr;
+}
+
+uint32_t sys_afs_table_update_entry(uint32_t index, struct file_desc *node) {
+
+	uint32_t state = AFS_NODE_INVALID;
+	uint8_t rw_res = 0;
+
+	iterator->ptr = iterator->old_ptr + (index * sizeof(struct file_desc));
+	memcpy(iterator->ptr, node, sizeof(struct file_desc));
+	rw_res = sys_ata_write_sectors(0, 2, AFS_TABLE_ROOT + ((index * sizeof(struct file_desc)) / 512), iterator->old_ptr + ((index * sizeof(struct file_desc)) / 512) * 512);
+	if (rw_res == ATA_SUCCESS)
+		state = index;
+
+	iterator->ptr = iterator->old_ptr;
+
+	return state;
+}
