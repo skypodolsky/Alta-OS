@@ -13,6 +13,8 @@ This features has been implemented:
 	 - IDE driver
 	 - standart library
 	 - keyboard driver
+	 - file system
+	 - file system API
 	 - time handling
 	 - tty routines
 
