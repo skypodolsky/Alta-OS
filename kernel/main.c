@@ -36,11 +36,11 @@ int kernel_start() {
 	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, AFS_NODE_NOCHILD, AFS_NODE_ATTR_ISFILE, "567");
 	
 	FILE *file = fopen("345", "r");
-	char abc[515];
-	for (int i = 0; i < 515; i++) {
+	char abc[1027];
+	for (int i = 0; i < 1027; i++) {
 		abc[i] = 0x20;
 	}
-	fwrite(abc, 1, 515, file);
+	fwrite(abc, 1, 1027, file);
 	fclose(file);
 
 //	printf("CPU FREQUENCY: %d\n", get_cpu_freq() );

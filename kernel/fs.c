@@ -192,11 +192,18 @@ exit:
 	return res;
 }
 
-void sys_get_node_by_index(uint32_t index, struct file_desc *node_out) {
-	iterator->ptr = iterator->old_ptr + (sizeof(struct file_desc) * index);
-	memcpy(node_out, iterator->ptr, sizeof(struct file_desc));
+uint32_t sys_get_node_by_index(uint32_t index, struct file_desc *node_out) {
 
-	iterator->ptr = iterator->old_ptr;
+	if (index < AFS_MAX_FILES) {
+		iterator->ptr = iterator->old_ptr + (sizeof(struct file_desc) * index);
+		memcpy(node_out, iterator->ptr, sizeof(struct file_desc));
+
+		iterator->ptr = iterator->old_ptr;
+
+		return index;
+	} else {
+		return AFS_NODE_INVALID;
+	}
 }
 
 uint32_t sys_afs_table_update_entry(uint32_t index, struct file_desc *node) {

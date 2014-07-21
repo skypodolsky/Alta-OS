@@ -54,6 +54,6 @@ uint32_t	sys_afs_table_del_node(uint32_t node);
 uint32_t 	sys_afs_table_update_entry(uint32_t index, struct file_desc *node_in);
 
 uint32_t 	sys_get_node_by_name(const char *name, uint32_t parent);
-void		sys_get_node_by_index(uint32_t index, struct file_desc *node_out);
+uint32_t	sys_get_node_by_index(uint32_t index, struct file_desc *node_out);
 
 #endif /* FS_HEADER */
