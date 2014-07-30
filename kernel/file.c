@@ -119,6 +119,9 @@ int fclose(FILE *fd) {
 
 	struct file_desc node;
 
+	if ( !(fd->f_mode & FILE_MODE_WRITE))
+		return 0;
+
 	do {
 
 		/* get part of node */
@@ -174,7 +177,7 @@ size_t fwrite(const void *ptr, size_t size,	size_t count, FILE *fd) {
 	size_t i			= 0;
 	size_t byte_size	= 0;
 	
-	if (!fd->f_mode & FILE_MODE_WRITE)
+	if (!(fd->f_mode & FILE_MODE_WRITE))
 		return 0;
 
 	byte_size = ceil_to_val(count * size, 512);
@@ -191,6 +194,42 @@ size_t fwrite(const void *ptr, size_t size,	size_t count, FILE *fd) {
 
 		return i;
 
+	} else {
+		return -1;
+	}
+}
+
+size_t fread(void *ptr, size_t size, size_t count, FILE *fd) {
+
+	size_t offset		= 0;
+	size_t byte_size	= 0;
+
+	uint8_t tmp_buf[512];
+	uint32_t f_tmp_index = 0;
+
+	struct file_desc node_tmp;
+
+	if (!fd->f_mode & FILE_MODE_READ)
+		return 0;
+
+	byte_size = ceil_to_val(count * size, 512);
+	fd->f_buf = kvalloc(byte_size);
+	if (fd->f_buf) {
+		f_tmp_index = fd->f_start_index;
+		do {
+			sys_get_node_by_index(f_tmp_index, &node_tmp);
+			sys_ata_read_sectors(0, 1, node_tmp.LBA, tmp_buf);
+
+			if (byte_size - offset >= 512)
+				memcpy(ptr + offset, tmp_buf, 512);
+			else
+				memcpy(ptr + offset, tmp_buf, byte_size - offset);
+
+			f_tmp_index = node_tmp.child_id;
+			offset += 512;
+		} while(node_tmp.child_id != AFS_NODE_NOCHILD);
+
+		return byte_size;
 	} else {
 		return -1;
 	}

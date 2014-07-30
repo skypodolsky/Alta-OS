@@ -35,13 +35,22 @@ int kernel_start() {
 	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, AFS_NODE_NOCHILD, AFS_NODE_ATTR_ISFILE, "456");
 	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, AFS_NODE_NOCHILD, AFS_NODE_ATTR_ISFILE, "567");
 	
-	FILE *file = fopen("345", "r");
+	FILE *file = fopen("345", "w");
 	char abc[1027];
 	for (int i = 0; i < 1027; i++) {
 		abc[i] = 0x20;
 	}
+	abc[1025] = 0x40;
+	abc[1026] = 0x10;
+
 	fwrite(abc, 1, 1027, file);
 	fclose(file);
+
+	char f[1028];
+	fread(f, 1, 1027, file);
+	for (int i = 0; i < 1027; i++) {
+		printf("%x ", f[i]);
+	}
 
 //	printf("CPU FREQUENCY: %d\n", get_cpu_freq() );
 
