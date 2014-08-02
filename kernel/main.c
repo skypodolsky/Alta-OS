@@ -52,7 +52,10 @@ int kernel_start() {
 		printf("%x ", f[i]);
 	}
 
-//	printf("CPU FREQUENCY: %d\n", get_cpu_freq() );
+    sys_tty_clear_screen();
+	char buff[100];
+	snprintf(buff, 100, "TEST1");
+	printf(buff);
 
 	while(1) {
 	}
