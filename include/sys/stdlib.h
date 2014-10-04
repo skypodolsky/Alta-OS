@@ -35,6 +35,7 @@ int 	strlen 	( const char* );
 char* 	strtok 	( char*, const char* );
 const char*	strchr	( const char*, int );
 char*	gets	( char* );
+int sprintf(char *, const char *, ...);
 
 /* memory functions */
 

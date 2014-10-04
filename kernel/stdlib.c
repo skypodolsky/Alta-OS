@@ -139,16 +139,15 @@ char *gets(char *s) {
 	return s;
 }
 
-int snprintf(char *s, size_t n, const char *fmt, ...) {
+int sprintf(char *s, const char *fmt, ...) {
 
-	int i			= 0;
-	int counter     = 0;
-	int num_param	= 1;
-	char byte		= 0;
-	char type		= 0;
-	char u_str[2]	= {0, 0};
-	char num_buf[MAX_NUM_DIGITS] = {0};
-	void* ptr 		= &fmt;
+	int i			= 0;	/* format symbol counter */
+	int counter     = 0;	/* bytes, that would be written */
+	int num_param	= 1;	/* parameter number */
+	char byte		= 0;	/* '%' / '\' or smth else*/
+	char type		= 0;	/* 'd' / 's' / 'x' / 'b' / 'c' or smth else */
+	char num_buf[MAX_NUM_DIGITS] = {0};	/* buffer for convertation */
+	void* ptr 		= &fmt;	/* first parameter's address */
 
 	for (i = 0; i < strlen(fmt); i++) {
 
@@ -159,60 +158,50 @@ int snprintf(char *s, size_t n, const char *fmt, ...) {
 			case '%':
 				switch (type) {
 					case 's':
-						s += counter;
-						counter++;
-						strcpy(s, *(char**)(ptr + (num_param++ * 4)));
+						strcpy(s + strlen(s), *(char**)(ptr + (num_param++ * 4)));
 						i++;
 						continue;
 						break;
-
 					case 'd':
 						itoa(num_buf, sizeof(num_buf), *(int*)(ptr + (num_param++ * 4)), 10);
-						s += counter;
-						counter++;
-						strcpy(s, num_buf);
+						strcpy(s + strlen(s), num_buf);
 						i++;
 						continue;
 						break;
 					case 'x':
 						itoa(num_buf, sizeof(num_buf), *(int*)(ptr + (num_param++ * 4)), 16);
-						s += counter;
-						strcpy(s, num_buf);
+						strcpy(s + strlen(s), num_buf);
 						i++;
 						continue;
 						break;
 					case 'b':
 						itoa(num_buf, sizeof(num_buf), *(int*)(ptr + (num_param++ * 4)), 2);
-						s += counter;
-						strcpy(s, num_buf);
+						strcpy(s + strlen(s), num_buf);
 						i++;
 						continue;
 						break;
 					case 'c':
-						u_str[0] = *(char*)(ptr + (num_param++ * 4));
-						strcpy(s, u_str);
+						s[strlen(s)] = *(char*)(ptr + (num_param++ * 4));
 						i++;
+						continue;
 						break;
 
 					default:
-						u_str[0] = byte;
-						counter++;
-						s += counter;
-						counter++;
-						strcpy(s, u_str);
+						s[strlen(s)] = byte;
 						break;
 				}
 				break;
+
 			default:
-				u_str[0] = byte;
-				s += counter;
-				counter++;
-				strcpy(s, u_str);
+				s[strlen(s)] = byte;
 				break;
 		}
 
 	}
-	return counter;
+
+	s[strlen(s)] = 0;	/* appending NULL-terminator in the end */
+	counter = strlen(s);
+	return (counter) ? counter : -1;
 }
 
 void printf(char* fmt, ...) {

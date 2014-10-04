@@ -28,6 +28,7 @@ int kernel_start() {
 	sys_ata_init();
 	sys_afs_init();
 
+/*
 	uint32_t node;
 	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, AFS_NODE_NOCHILD, AFS_NODE_ATTR_ISFILE, "123");
 	node = sys_afs_table_add_node(AFS_NODE_TYPE_ISEXIST, 0, AFS_NODE_NOCHILD, AFS_NODE_ATTR_ISFILE, "234");
@@ -51,11 +52,12 @@ int kernel_start() {
 	for (int i = 0; i < 1027; i++) {
 		printf("%x ", f[i]);
 	}
-
+*/
     sys_tty_clear_screen();
 	char buff[100];
-	snprintf(buff, 100, "TEST1");
+	int a = sprintf(buff, "%s %d %x %s\n", "zzmil", 60, 60, "123");
 	printf(buff);
+	printf("a = %d\n", a);
 
 	while(1) {
 	}
