@@ -31,6 +31,7 @@ int kernel_start() {
 	sys_afs_init();
 	sys_task_head_init();
 
+/*
 	uint32_t pid = sys_add_task(0);
 	pid = sys_add_task(pid);
 	pid = sys_add_task(pid);
@@ -38,6 +39,7 @@ int kernel_start() {
 	pid = sys_add_task(pid);
 	pid = sys_add_task(pid);
 	pid = sys_add_task(pid);
+*/
 
 	while(1) {
 		sys_scheduler();
