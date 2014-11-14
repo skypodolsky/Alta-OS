@@ -21,7 +21,7 @@ static size_t* virtual_represent_by_table(uint16_t pde, uint16_t pte, uint16_t o
 }
 
 /*************************************************************
-  Function 'index_by_vurtual'
+  Function 'index_by_virtual'
   retrieves index of page in the page list by virtual address
  *************************************************************/
 
@@ -230,7 +230,7 @@ void* kvalloc(uint32_t size) {
 
 		}
 
-		/* now, if it is NO pages, we call 'kmalloc' */
+		/* now, if it is NO available pages at all, we call 'kmalloc' */
 
 		res = kmalloc(size + 8, PAGE_ALLOC | PAGE_DPL0);	/* allocating a full page */
 		*res = size;	/* lvl2 marker */

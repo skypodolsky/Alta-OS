@@ -59,7 +59,7 @@ mov eax, 0x41000 + 0x3000 + 10011b
     mov ebx, 0x41000 + 0x2000
     call FillTable
 
-;######################################## Enabling paging #######################################
+;######################################## Enabling of paging #######################################
 
     mov eax, 0x28000		; address of kernels PDE
     mov cr3, eax
