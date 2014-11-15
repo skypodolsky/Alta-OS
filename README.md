@@ -20,6 +20,6 @@ This features has been implemented:
 
 Contact information:
 
-	 - e-mail: mark_castle@mail.ru; 	Skype: marek_raspiro
+	 - e-mail: skypodolsky@mail.ru; 	Skype: marek_raspiro
 	 - e-mail: e.kondrashyn@gmail.com; 	Skype: zzmil123
 
