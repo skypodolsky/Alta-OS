@@ -23,3 +23,4 @@ Contact information:
 	 - e-mail: skypodolsky@gmail.com; 	Skype: marek_raspiro
 	 - e-mail: e.kondrashyn@gmail.com; 	Skype: zzmil123
 
+![alt text](https://github.com/skypodolsky/Alta-OS/blob/master/Alta_OS.png)
