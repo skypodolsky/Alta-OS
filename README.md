@@ -1,7 +1,7 @@
 Alta-OS
 =======
 
-Alta OS - is an operating system, designed by Stanislav Barantsev for Intel i386 processor. You can freely use it in any own interests.
+Alta OS - is an operating system, designed for Intel i386 processor. You can freely use it in any own interests.
 
 These features have been implemented:
 
